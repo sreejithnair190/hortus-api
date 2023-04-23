@@ -1,9 +1,17 @@
 const express = require('express');
 const plantController = require('../controller/plantController')
 
-const route = express.Router()
+const router = express.Router()
 
-route
-    .get('/', plantController.get_plants)
+router
+    .route('/')
+    .get( plantController.get_plants )
+    .post( plantController.create_plant )
 
-module.exports = route
+router
+    .route('/:id')
+    .get(plantController.get_plant)
+    .patch(plantController.update_plant)
+    .delete(plantController.delete_plant)
+
+module.exports = router
