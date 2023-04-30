@@ -1,10 +1,12 @@
 const Plants = require('../model/plantModel')
+const ApiFeatures = require('./../utils/apiFeatures');
 
 exports.get_plants = async (req, res) => {
     try{
-        
-        const plants = await Plants.find();
+        const plantFeatures = new ApiFeatures(Plants.find(), req.query);
+        plantFeatures.filter();
 
+        const plants = await plantFeatures.query;
         res.status(200).json({
             status:'success',
             results:plants.length,

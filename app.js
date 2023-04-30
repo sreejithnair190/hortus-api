@@ -12,11 +12,11 @@ app.use(express.json());
     app.use(morgan('dev'));
 // }
 
-app.use((req, res, next) => {
-    req.requestedTime = new Date().toISOString();
-    console.log(req.requestedTime);
-    next();
-});
+// app.use((req, res, next) => {
+//     req.requestedTime = new Date().toISOString();
+//     console.log(req.requestedTime);
+//     next();
+// });
 
 //Routes
 app.use('/api/v1/plants', plantRouter)
