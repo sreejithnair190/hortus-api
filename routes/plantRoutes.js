@@ -1,11 +1,13 @@
 const express = require('express');
 const plantController = require('../controller/plantController')
+const authController = require('../controller/authController')
+
 
 const router = express.Router()
 
 router
     .route('/')
-    .get( plantController.get_plants )
+    .get( authController.protect, plantController.get_plants )
     .post( plantController.create_plant )
 
 router
