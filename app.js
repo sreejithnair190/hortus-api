@@ -9,6 +9,11 @@ const hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
+const plantRouter = require('./routes/plantRoutes')
+const seedRouter = require('./routes/seedRoutes')
+const userRouter = require('./routes/userRoutes')
+
+
 const AppError = require("./utils/appError");
 const errorHandler = require("./handlers/handleError");
 
@@ -63,7 +68,9 @@ app.use(
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 //Routes
-app.use("/api/v1/plants", plantRouter);
+app.use('/api/v1/plants', plantRouter)
+app.use('/api/v1/seeds',seedRouter)
+app.use('/api/v1/user',userRouter)
 
 // Handle Undefined Route
 app.all("*", (req, res, next) => {
