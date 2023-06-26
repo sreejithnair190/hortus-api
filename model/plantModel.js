@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { type } = require('os');
 
 const plantSchema = mongoose.Schema({
     name:{
@@ -16,37 +17,45 @@ const plantSchema = mongoose.Schema({
     },
     ratingsAverage:{
         type:Number,
-        default:4.0
+        default:4.5
     },
     ratingsQuantity:{
         type:Number,
         default: 0
     },
     available:{
-        type:Boolean,
-        default:true
+        type:Number,
+        default:0
     },
-    flower:{
-        type:[String]
+    imageCover: {
+        type:String,
+        // required:[true,'A product must have a cover image']
     },
-    seeds:{
-        type:[String]
-    },
-    soil:{
-        type:[String]
-    },
-    fertilizer:{
-        type:[String]
-    },
-    color:{
-        type:[String]
-    },
-    season:{
-        type:[String]
-    },
-    type:{
-        type:String
-    },
+    images:[String],
+    seed:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Seeds'
+        }
+    ],
+    season:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Seasons'
+        }
+    ],
+    type:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Types'
+        }
+    ],
+    location:[
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Locations'
+        }
+    ],
     createdAt:{
         type:Date,
         default:Date.now(),
