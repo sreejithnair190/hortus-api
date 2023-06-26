@@ -9,16 +9,13 @@ const hpp = require("hpp");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
-const plantRouter = require('./routes/plantRoutes')
-const seedRouter = require('./routes/seedRoutes')
-const userRouter = require('./routes/userRoutes')
-
-
 const AppError = require("./utils/appError");
 const errorHandler = require("./handlers/handleError");
 
 // Routers
 const plantRouter = require("./routes/plantRoutes");
+const seedRouter = require('./routes/seedRoutes')
+const userRouter = require('./routes/userRoutes')
 
 // Configuring ENV
 dotenv.config({ path: "./config.env" });

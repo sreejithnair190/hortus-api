@@ -1,5 +1,5 @@
 const User = require("../model/userModel");
-const factory = require("./handleFactory");
+const factory = require("./../handlers/handleFactory");
 
 
 exports.get_all_users = factory.getAll(User);

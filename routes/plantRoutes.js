@@ -7,8 +7,8 @@ const router = express.Router()
 
 router
     .route('/')
-    .get( authController.protect, plantController.get_plants )
-    .post( plantController.create_plant )
+    .get(plantController.get_plants)
+    .post(plantController.create_plant)
 
 router
     .route('/:id')

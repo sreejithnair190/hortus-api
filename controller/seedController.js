@@ -1,6 +1,6 @@
 
 const Seeds = require(`../model/seedModel`);
-const factory = require("./handleFactory");
+const factory = require("./../handlers/handleFactory");
 
 
 exports.get_seeds = factory.getAll(Seeds);

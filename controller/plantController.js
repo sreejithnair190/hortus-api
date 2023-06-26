@@ -1,5 +1,5 @@
 const Plants = require("../model/plantModel");
-const factory = require("./handleFactory");
+const factory = require("./../handlers/handleFactory");
 
 
 exports.get_plants = factory.getAll(Plants);
