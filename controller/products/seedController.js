@@ -1,7 +1,5 @@
-
-const Seeds = require(`../model/seedModel`);
-const factory = require("./../handlers/handleFactory");
-
+const Seeds = require('./../../model/products/seedmodel');
+const factory = require('./../../handlers/handleFactory');
 
 exports.get_seeds = factory.getAll(Seeds);
 exports.create_seed = factory.createOne(Seeds);
