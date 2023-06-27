@@ -23,8 +23,18 @@ const seedSchema = mongoose.Schema({
         default: 0
     },
     available:{
-        type:Boolean,
-        default:true
+        type:Number,
+        default:0
+    },
+    imageCover: {
+        type:String,
+        // required:[true,'A product must have a cover image']
+    },
+    images:[String],
+    createdAt:{
+        type:Date,
+        default:Date.now(),
+        select:false,
     }
     
 })
