@@ -1,6 +1,5 @@
-const Plants = require("../model/plantModel");
-const factory = require("./../handlers/handleFactory");
-
+const Plants = require('./../../model/products/plantModel');
+const factory = require('./../../handlers/handleFactory');
 
 exports.get_plants = factory.getAll(Plants);
 exports.create_plant = factory.createOne(Plants);
