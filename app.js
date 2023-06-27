@@ -13,9 +13,10 @@ const AppError = require("./utils/appError");
 const errorHandler = require("./handlers/handleError");
 
 // Routers
-const plantRouter = require("./routes/plantRoutes");
-const seedRouter = require('./routes/seedRoutes')
-const userRouter = require('./routes/userRoutes')
+const plantRouter = require('./routes/products/plantRoutes');
+const seedRouter = require('./routes/products/seedRoutes');
+const fertilizerRouter = require('./routes/products/fertilizerRoutes')
+const userRouter = require('./routes/users/userRoutes');
 
 // Configuring ENV
 dotenv.config({ path: "./config.env" });
@@ -65,9 +66,10 @@ app.use(
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 //Routes
-app.use('/api/v1/plants', plantRouter)
-app.use('/api/v1/seeds',seedRouter)
-app.use('/api/v1/user',userRouter)
+app.use(process.env.API + 'plants', plantRouter)
+app.use(process.env.API + 'seeds', seedRouter)
+app.use(process.env.API + 'fertilizers', seedRouter)
+app.use(process.env.API + 'user', userRouter)
 
 // Handle Undefined Route
 app.all("*", (req, res, next) => {
