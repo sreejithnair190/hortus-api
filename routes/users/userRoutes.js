@@ -1,6 +1,7 @@
-const express = require("express");
-const authController = require("../../controller/users/authController");
-const userController = require("../../controller/users/userController");
+const express = require('express');
+const authController = require('../../controller/users/authController');
+const userController = require('../../controller/users/userController');
+
 
 const router = express.Router();
 
@@ -13,10 +14,12 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 router.use(authController.protect);
 
 router.patch("/updateMyPassword", authController.updatePassword);
+router.delete('/deleteMe', userController.deleteMe);
 
 router.use(authController.restrictTo("admin"));
 
 router.route("/").get(userController.get_all_users);
+
 
 router
   .route("/:id")
