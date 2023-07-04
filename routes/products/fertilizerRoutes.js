@@ -9,12 +9,12 @@ router.use(authController.protect);
 router
     .route('/')
     .get( fertilizerController.get_fertilizers )
-    .post( fertilizerController.create_fertilizers )
+    .post( fertilizerController.create_fertilizer )
 
 router
     .route('/:id')
-    .get(fertilizerController.get_fertilizers)
-    .patch(fertilizerController.update_fertilizers)
-    .delete(fertilizerController.delete_fertilizers)
+    .get(fertilizerController.get_fertilizer)
+    .patch(fertilizerController.update_fertilizer)
+    .delete(fertilizerController.delete_fertilizer)
 
 module.exports = router

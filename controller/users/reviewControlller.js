@@ -1,9 +1,23 @@
 const Review = require('./../../model/users/reviewModel');
 const factory = require('./../../handlers/handleFactory');
+const AppError = require('./../../utils/appError');
 
-exports.setTourAndUserIds = (req, res, next) => {
-    if(!req.body.tour) req.body.tour = req.params.tour_id
-    if(!req.body.user) req.body.user = req.user.id;
+exports.reviewMiddleware = (req, res, next) => {
+    const productArr = ['plant', 'seed', 'fertilizer', 'soil', 'pot', 'accessories'];
+    const  product = req.body.product;
+    const  product_id = req.body.product_id || req.params.id;
+    const user = req.body.user || req.user.id;
+
+    if (!productArr.includes(product)) return next(new AppError('No such product exist!', 400));
+    if (!product_id) return next(new AppError('No product found!', 400));
+
+    req.body = {
+        ...req.body,
+        [product]: product_id,
+        user
+    };
+    req.body.product = undefined;
+    req.body.product_id = undefined;
     next();
 }
 

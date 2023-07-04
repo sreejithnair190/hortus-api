@@ -60,6 +60,15 @@ const plantSchema = mongoose.Schema({
         default:Date.now(),
         select:false,
     }
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+plantSchema.virtual('reviews',{
+    ref: 'Reviews',
+    foreignField: 'plant',
+    localField: '_id'
 })
 
 const Plants = mongoose.model('Plants', plantSchema);
