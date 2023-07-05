@@ -43,10 +43,10 @@ const plantSchema = mongoose.Schema({
             ref: 'Seasons'
         }
     ],
-    type:[
+    categories:[
         {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Types'
+            type: [mongoose.Schema.ObjectId],
+            ref: 'Categories'
         }
     ],
     location:[
