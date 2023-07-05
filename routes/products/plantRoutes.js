@@ -1,9 +1,11 @@
 const express = require('express');
 const plantController = require('../../controller/products/plantController')
 const authController = require('./../../controller/users/authController');
-const reviewController = require("./../../controller/users/reviewControlller");
+const reviewRouter = require('./../../routes/users/reviewRoutes')
 
 const router = express.Router()
+
+router.use('/:id/reviews', reviewRouter)
 
 router.use(authController.protect);
 
@@ -19,12 +21,5 @@ router
     .delete(plantController.delete_plant)
 
 
-router
-    .route('/:id/reviews')
-    .post(
-        authController.restrictTo('user'),
-        reviewController.reviewMiddleware,
-        reviewController.create_review
-    );
 
 module.exports = router
