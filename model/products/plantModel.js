@@ -43,10 +43,10 @@ const plantSchema = mongoose.Schema({
             ref: 'Seasons'
         }
     ],
-    type:[
+    categories:[
         {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Types'
+            type: [mongoose.Schema.ObjectId],
+            ref: 'Categories'
         }
     ],
     location:[
@@ -60,6 +60,15 @@ const plantSchema = mongoose.Schema({
         default:Date.now(),
         select:false,
     }
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+plantSchema.virtual('reviews',{
+    ref: 'Reviews',
+    foreignField: 'plant',
+    localField: '_id'
 })
 
 const Plants = mongoose.model('Plants', plantSchema);

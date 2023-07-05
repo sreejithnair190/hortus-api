@@ -5,25 +5,28 @@ const userController = require('../../controller/users/userController');
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login); // admin@gmail.com   admin123
+router.post("/signup", authController.signup);
+router.post("/login", authController.login);
 
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.post("/forgotPassword", authController.forgotPassword);
+router.patch("/resetPassword/:token", authController.resetPassword);
 
-router.patch('/updateMyPassword',authController.protect,authController.updatePassword);
+router.use(authController.protect);
 
-router.delete('/deleteMe', authController.protect, userController.deleteMe);
+router.get("/me", userController.getMe,userController.get_user)
+
+router.patch("/updateMyPassword", authController.updatePassword);
+router.delete('/deleteMe', userController.deleteMe);
+
+router.use(authController.restrictTo("admin"));
+
+router.route("/").get(userController.get_all_users);
+
 
 router
-    .route('/')
-    .get( authController.protect, authController.restrictTo('admin'), userController.get_all_users )
+  .route("/:id")
+  .get(userController.get_user)
+  .patch(userController.update_user)
+  .delete(userController.delete_user);
 
-router
-    .route('/:id')
-    .get(authController.protect, authController.restrictTo('admin'),userController.get_user)
-    .patch(authController.protect, authController.restrictTo('admin'),userController.update_user)
-    .delete(authController.protect, authController.restrictTo('admin'),userController.delete_user)
-
-
-module.exports = router
+module.exports = router;
