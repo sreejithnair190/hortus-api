@@ -9,11 +9,14 @@ const reviewSchema = mongoose.Schema({
     type: Number,
     min: 1,
     max: 5,
+    required: [true, "A review must have a rating"]
   },
   product:{
     type:String,
-    enum:['plant', 'seed', 'fertilizer', 'soil', 'pot', 'accessories'],
-    required:[true, 'A review must have a product']
+    enum:['plant', 'seed', 'fertilizer', 'soil', 'pot', 'accessories']
+  },
+  product_id:{
+    type:String,
   },
   createdAt: {
     type: Date,
@@ -30,46 +33,52 @@ const reviewSchema = mongoose.Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Plants',
-      required: [true, 'A review must belong to user'],
     },
   ],
   seed: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Seeds',
-      required: [true, 'A review must belong to user'],
     },
   ],
   fertilizer: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Fertilizers',
-      required: [true, 'A review must belong to user'],
     },
   ],
 //   soil: [
 //     {
 //       type: mongoose.Schema.ObjectId,
 //       ref: 'Soils',
-//       required: [true, 'A review must belong to user'],
 //     },
 //   ],
 //   pot: [
 //     {
 //       type: mongoose.Schema.ObjectId,
 //       ref: 'Pots',
-//       required: [true, 'A review must belong to user'],
 //     },
 //   ],
 //   accessory: [
 //     {
 //       type: mongoose.Schema.ObjectId,
 //       ref: 'Accessories',
-//       required: [true, 'A review must belong to user'],
 //     },
 //   ],
+},{
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-const Review = mongoose.model('Reviews', reviewSchema);
+reviewSchema.pre(/^find/, function (next){
+  this
+  .populate({
+    path: 'user',
+    select: 'name'
+  })
+  next();
+})
 
-module.exports = Review;
+const Reviews = mongoose.model('Reviews', reviewSchema);
+
+module.exports = Reviews;
