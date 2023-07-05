@@ -3,7 +3,7 @@ const factory = require('./../../handlers/handleFactory');
 const AppError = require('./../../utils/appError');
 
 exports.reviewMiddleware = (req, res, next) => {
-    const productArr = ['plant', 'seed', 'fertilizer', 'soil', 'pot', 'accessories'];
+    const productArr = ['plant', 'seed', 'fertilizer', 'soil', 'accessory'];
     const  product = req.body.product;
     const  product_id = req.body.product_id || req.params.id;
     const user = req.body.user || req.user.id;

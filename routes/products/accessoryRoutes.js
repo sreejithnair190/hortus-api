@@ -4,6 +4,8 @@ const authController = require('./../../controller/users/authController');
 
 const router = express.Router();
 
+router.use('/:id/reviews', reviewRouter)
+
 router.use(authController.protect);
 
 

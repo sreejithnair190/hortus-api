@@ -1,5 +1,5 @@
-const Type = require('./../../model/products/typeModel');
-const factory = require('./../../handlers/handleFactory');
+const Type = require('../model/typeModel');
+const factory = require('../handlers/handleFactory');
 
 exports.get_types = factory.getAll(Type);
 exports.create_type = factory.createOne(Type);

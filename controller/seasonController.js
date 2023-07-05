@@ -1,5 +1,5 @@
-const Season = require('./../../model/products/seasonModel');
-const factory = require('./../../handlers/handleFactory');
+const Season = require('../model/seasonModel');
+const factory = require('../handlers/handleFactory');
 
 exports.get_seasons = factory.getAll(Season);
 exports.create_season = factory.createOne(Season);

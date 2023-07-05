@@ -47,24 +47,18 @@ const reviewSchema = mongoose.Schema({
       ref: 'Fertilizers',
     },
   ],
-//   soil: [
-//     {
-//       type: mongoose.Schema.ObjectId,
-//       ref: 'Soils',
-//     },
-//   ],
-//   pot: [
-//     {
-//       type: mongoose.Schema.ObjectId,
-//       ref: 'Pots',
-//     },
-//   ],
-//   accessory: [
-//     {
-//       type: mongoose.Schema.ObjectId,
-//       ref: 'Accessories',
-//     },
-//   ],
+  soil: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Soils',
+    },
+  ],
+  accessory: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Accessories',
+    },
+  ],
 },{
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
