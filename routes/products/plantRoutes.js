@@ -12,13 +12,13 @@ router.use(authController.protect);
 router
     .route('/')
     .get(plantController.get_plants)
-    .post(plantController.create_plant)
+    .post(authController.restrictTo("admin"),plantController.create_plant)
 
 router
     .route('/:id')
     .get(plantController.get_plant)
-    .patch(plantController.update_plant)
-    .delete(plantController.delete_plant)
+    .patch(authController.restrictTo("admin"),plantController.update_plant)
+    .delete(authController.restrictTo("admin"),plantController.delete_plant)
 
 
 

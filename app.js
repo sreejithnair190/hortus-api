@@ -16,6 +16,9 @@ const errorHandler = require("./handlers/handleError");
 const plantRouter = require('./routes/products/plantRoutes');
 const seedRouter = require('./routes/products/seedRoutes');
 const fertilizerRouter = require('./routes/products/fertilizerRoutes');
+const accessoryRouter = require('./routes/products/accessoryRoutes');
+const seasonRouter = require('./routes/products/seasonRoutes');
+const typeRouter = require('./routes/products/typeRoutes');
 const userRouter = require('./routes/users/userRoutes');
 const reviewRouter = require('./routes/users/reviewRoutes');
 
@@ -70,6 +73,9 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(process.env.API + 'plants', plantRouter);
 app.use(process.env.API + 'seeds', seedRouter);
 app.use(process.env.API + 'fertilizers', fertilizerRouter);
+app.use(process.env.API + 'accessory', accessoryRouter);
+app.use(process.env.API + 'season', seasonRouter);
+app.use(process.env.API + 'type', typeRouter);
 app.use(process.env.API + 'user', userRouter);
 app.use(process.env.API + 'reviews', reviewRouter);
 

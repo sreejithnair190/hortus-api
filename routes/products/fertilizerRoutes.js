@@ -12,12 +12,12 @@ router.use(authController.protect);
 router
     .route('/')
     .get( fertilizerController.get_fertilizers )
-    .post( fertilizerController.create_fertilizer )
+    .post( authController.restrictTo("admin"),fertilizerController.create_fertilizers )
 
 router
     .route('/:id')
-    .get(fertilizerController.get_fertilizer)
-    .patch(fertilizerController.update_fertilizer)
-    .delete(fertilizerController.delete_fertilizer)
+    .get(fertilizerController.get_fertilizers)
+    .patch(authController.restrictTo("admin"),fertilizerController.update_fertilizers)
+    .delete(authController.restrictTo("admin"),fertilizerController.delete_fertilizers)
 
 module.exports = router
