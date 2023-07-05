@@ -36,7 +36,16 @@ const fertilizerSchema = mongoose.Schema({
     default: Date.now(),
     select: false,
   },
-});
+},{
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+})
+
+fertilizerSchema.virtual('reviews',{
+  ref: 'Reviews',
+  foreignField: 'fertilizer',
+  localField: '_id'
+})
 
 const Fertilizers = mongoose.model("Fertilizers", fertilizerSchema);
 

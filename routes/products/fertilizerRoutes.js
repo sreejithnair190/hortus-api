@@ -3,8 +3,9 @@ const fertilizerController = require('../../controller/products/fertilizerContro
 const authController = require('./../../controller/users/authController');
 const reviewRouter = require('./../../routes/users/reviewRoutes')
 
-
 const router = express.Router()
+
+router.use('/:id/reviews', reviewRouter)
 
 router.use(authController.protect);
 

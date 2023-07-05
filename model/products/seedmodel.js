@@ -37,6 +37,15 @@ const seedSchema = mongoose.Schema({
         select:false,
     }
     
+},{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+seedSchema.virtual('reviews',{
+    ref: 'Reviews',
+    foreignField: 'seed',
+    localField: '_id'
 })
 
 const Seeds = mongoose.model('Seeds', seedSchema);
