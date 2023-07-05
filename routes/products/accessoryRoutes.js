@@ -6,15 +6,16 @@ const router = express.Router();
 
 router.use(authController.protect);
 
+
 router
     .route('/')
     .get(accessoryController.get_accessories)
-    .post(accessoryController.create_accessory);
+    .post(authController.restrictTo("admin"),accessoryController.create_accessory);
 
 router
     .route('/:id')
     .get(accessoryController.get_accessory)
-    .patch(accessoryController.update_accessory)
-    .delete(accessoryController.delete_accessory);
+    .patch(authController.restrictTo("admin"),accessoryController.update_accessory)
+    .delete(authController.restrictTo("admin"),accessoryController.delete_accessory);
 
 module.exports = router;
