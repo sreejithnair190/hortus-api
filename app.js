@@ -93,7 +93,7 @@ app.use(errorHandler);
 if (!process.env.PASSWORD) {
   console.log('Please provide a password in env');
 }
-const DB = process.env.DATABAse.replace('<password>',process.env.PASSWORD);
+const DB = process.env.DATABASE.replace('<password>',process.env.PASSWORD);
 mongoose.connect(DB, {
   useNewUrlParser:true
 })
