@@ -25,7 +25,7 @@ const reviewRouter = require('./routes/users/reviewRoutes');
 const webRouter = require('./routes/webRoutes');
 
 // Configuring ENV
-dotenv.config({ path: "./.env" });
+dotenv.config();
 
 // Express App
 const app = express();
