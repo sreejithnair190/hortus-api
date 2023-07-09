@@ -55,7 +55,7 @@ exports.login = catchAsync( async (req,res,next) =>{
     const user= await User.findOne({email}).select('+password');
 
     if(!user || !(await user.correctPassword(password,user.password))){
-        return next(new AppError('Incorrect email or password',401));
+        return next(new AppError('Incorrect email or password',403));
         
     }
 
@@ -71,7 +71,7 @@ exports.protect = catchAsync( async (req,res,next) => {
   }
 
   if(!token){
-    return next(new AppError('Not Logged in',401));
+    return next(new AppError('Not Logged in',403));
     
   }
 
@@ -79,12 +79,12 @@ exports.protect = catchAsync( async (req,res,next) => {
 
   const currentUser = await User.findById(decoded.id);
   if(!currentUser){
-    return next(new AppError("User with this token doesn't exist",401));
+    return next(new AppError("User with this token doesn't exist",403));
     
   }
 
   if(currentUser.changedPasswordAfter(decoded.iat)){
-    return next(new AppError('User recently changed password. Please login again',401));
+    return next(new AppError('User recently changed password. Please login again',403));
     
   }
   
@@ -134,7 +134,7 @@ try{
   user.passwordResetExpires = undefined;
   await user.save({validateBeforeSave: false});
 
-  return next(new AppError('There was an error sending email. Try again later.',500));
+  return next(new AppError('There was an error sending email. Try again later.',400));
 }
   
 
@@ -167,7 +167,7 @@ exports.updatePassword =catchAsync( async (req,res,next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   if(!(await user.correctPassword(req.body.passwordCurrent,user.password))){
-    return next(new AppError('Your password is wrong.',401));
+    return next(new AppError('Your password is incorrect.',403));
   }
 
   user.password = req.body.password;
