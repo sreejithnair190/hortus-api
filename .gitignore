@@ -4,4 +4,4 @@ node_modules/
 .jpeg
 error.log
 .idea/
-config.env
+.env

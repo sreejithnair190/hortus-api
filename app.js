@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 
@@ -21,9 +22,10 @@ const seasonRouter = require('./routes/seasonRoutes');
 const typeRouter = require('./routes/typeRoutes');
 const userRouter = require('./routes/users/userRoutes');
 const reviewRouter = require('./routes/users/reviewRoutes');
+const webRouter = require('./routes/webRoutes');
 
 // Configuring ENV
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "./.env" });
 
 // Express App
 const app = express();
@@ -70,6 +72,7 @@ app.use(
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 //Routes
+app.use('/', webRouter)
 app.use(process.env.API + 'plants', plantRouter);
 app.use(process.env.API + 'seeds', seedRouter);
 app.use(process.env.API + 'fertilizers', fertilizerRouter);
@@ -85,5 +88,20 @@ app.all("*", (req, res, next) => {
 });
 
 app.use(errorHandler);
+
+//Database Connection
+if (!process.env.PASSWORD) {
+  console.log('Please provide a password in env');
+}
+const DB = process.env.DATABAse.replace('<password>',process.env.PASSWORD);
+mongoose.connect(DB, {
+  useNewUrlParser:true
+})
+.then( con => console.log("Database connection was successful"))
+.catch(() => console.log("Database connection was unsuccessful"))
+
+// Starting Server
+const port = process.env.PORT || 6000;
+app.listen(port, () => console.log(`App is running on port ${port}`));
 
 module.exports = app;

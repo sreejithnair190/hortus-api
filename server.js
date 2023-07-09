@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const app = require('./app');
 
 // Configuring env
-dotenv.config({path:'./config.env'})
+dotenv.config({path:'./.env'})
 
 //Database Connection
 if (!process.env.PASSWORD) {
