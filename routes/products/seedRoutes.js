@@ -7,17 +7,17 @@ const router = express.Router()
 
 router.use('/:id/reviews', reviewRouter)
 
-router.use(authController.protect);
+
 
 router
     .route('/')
     .get( seedController.get_seeds )
-    .post(authController.restrictTo("admin"), seedController.create_seed )
+    .post(authController.protect,authController.restrictTo("admin"), seedController.create_seed )
 
 router
     .route('/:id')
     .get(seedController.get_seed)
-    .patch(authController.restrictTo("admin"),seedController.update_seed)
-    .delete(authController.restrictTo("admin"),seedController.delete_seed)
+    .patch(authController.protect,authController.restrictTo("admin"),seedController.update_seed)
+    .delete(authController.protect,authController.restrictTo("admin"),seedController.delete_seed)
 
 module.exports = router
