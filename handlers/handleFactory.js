@@ -1,30 +1,31 @@
 const ApiFeatures = require("../utils/apiFeatures");
+const AppError = require("../utils/appError");
+const catchAsync = require("../handlers/handleAsyncErr");
 
-exports.deleteOne = (Model) => async (req, res) => {
-  try {
-    const id = req.params.id;
-    const doc = await Model.findByIdAndDelete(id);
+exports.deleteOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndDelete(req.params.id);
 
-    res.status(200).json({
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
+    }
+
+    res.status(204).json({
       status: "success",
-      message: "The Doc has been deleted",
+      data: null,
     });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      message: "Something went wrong",
-      error,
-    });
-  }
-};
+  });
 
-exports.updateOne = (Model) => async (req, res) => {
-  try {
-    const id = req.params.id;
-    const doc = await Model.findByIdAndUpdate(id, req.body, {
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
+    }
 
     res.status(200).json({
       status: "success",
@@ -32,17 +33,10 @@ exports.updateOne = (Model) => async (req, res) => {
         data: doc,
       },
     });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      message: "Something went wrong",
-      error,
-    });
-  }
-};
+  });
 
-exports.createOne = (Model) => async (req, res) => {
-  try {
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
 
     res.status(201).json({
@@ -51,23 +45,19 @@ exports.createOne = (Model) => async (req, res) => {
         data: doc,
       },
     });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      message: "Something went wrong",
-      error,
-    });
-  }
-};
+  });
 
-exports.getOne = (Model, popuplateOptions) => async (req, res) => {
-  try {
-    const id = req.params.id;
-    let query = await Model.findById(id);
+exports.getOne = (Model, popuplateOptions) =>
+  catchAsync(async (req, res, next) => {
+    let query = await Model.findById(req.params.id);
 
     if (popuplateOptions) query = query.populate(popuplateOptions);
 
     const doc = await query;
+
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
+    }
 
     res.status(200).json({
       status: "success",
@@ -75,17 +65,10 @@ exports.getOne = (Model, popuplateOptions) => async (req, res) => {
         data: doc,
       },
     });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      message: "Something went wrong",
-      error,
-    });
-  }
-};
+  });
 
-exports.getAll = (Model) => async (req, res) => {
-  try {
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
     const Features = new ApiFeatures(Model.find(), req.query);
     Features.filter().sort().fields().pagination();
 
@@ -97,11 +80,4 @@ exports.getAll = (Model) => async (req, res) => {
         data: doc,
       },
     });
-  } catch (error) {
-    res.status(404).json({
-      status: "failed",
-      message: "Something went wrong",
-      error,
-    });
-  }
-};
+  });
