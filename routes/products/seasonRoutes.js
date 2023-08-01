@@ -1,6 +1,6 @@
 const express = require('express');
-const seasonController = require('../controller/seasonController');
-const authController = require('../controller/users/authController');
+const seasonController = require('../../controller/products/seasonController');
+const authController = require('../../controller/users/authController');
 
 const router = express.Router();
 

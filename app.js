@@ -14,16 +14,14 @@ const AppError = require("./utils/appError");
 const errorHandler = require("./handlers/handleError");
 
 // Routers
-const plantRouter = require('./routes/products/plantRoutes');
-const seedRouter = require('./routes/products/seedRoutes');
-const fertilizerRouter = require('./routes/products/fertilizerRoutes');
-const accessoryRouter = require('./routes/products/accessoryRoutes');
-const seasonRouter = require('./routes/seasonRoutes');
-const typeRouter = require('./routes/typeRoutes');
+const productRouter = require('./routes/products/productRoutes');
+const seasonRouter = require('./routes/products/seasonRoutes');
+const typeRouter = require('./routes/products/typeRoutes');
 const userRouter = require('./routes/users/userRoutes');
 const reviewRouter = require('./routes/users/reviewRoutes');
 const webRouter = require('./routes/webRoutes');
 
+const { ENV, API_URL } = require('./utils/constants');
 // Configuring ENV
 dotenv.config();
 
@@ -69,18 +67,15 @@ app.use(
 );
 
 // Logging in Development
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+if (ENV === "development") app.use(morgan("dev"));
 
 //Routes
 app.use('/', webRouter)
-app.use(process.env.API + 'plants', plantRouter);
-app.use(process.env.API + 'seeds', seedRouter);
-app.use(process.env.API + 'fertilizers', fertilizerRouter);
-app.use(process.env.API + 'accessory', accessoryRouter);
-app.use(process.env.API + 'season', seasonRouter);
-app.use(process.env.API + 'type', typeRouter);
-app.use(process.env.API + 'user', userRouter);
-app.use(process.env.API + 'reviews', reviewRouter);
+app.use(API_URL + 'products', productRouter);
+app.use(API_URL + 'season', seasonRouter);
+app.use(API_URL + 'type', typeRouter);
+app.use(API_URL + 'users', userRouter);
+app.use(API_URL + 'reviews', reviewRouter);
 
 // Handle Undefined Route
 app.all("*", (req, res, next) => {
@@ -90,9 +85,8 @@ app.all("*", (req, res, next) => {
 app.use(errorHandler);
 
 //Database Connection
-if (!process.env.PASSWORD) {
-  console.log('Please provide a password in env');
-}
+if (!process.env.PASSWORD) console.log('Please provide a password in env');
+
 const DB = process.env.DATABASE.replace('<password>',process.env.PASSWORD);
 mongoose.connect(DB, {
   useNewUrlParser:true

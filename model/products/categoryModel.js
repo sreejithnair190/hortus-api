@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const categorySchema = mongoose.Schema({
     name:{
         type:String,
-        required: [true, 'A plant must have a name'],
+        required: [true, 'A category must have a name'],
         unique:true
     },
     createdAt:{
@@ -16,6 +16,6 @@ const categorySchema = mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-const Categories = mongoose.model('Categories', categorySchema);
+const Category = mongoose.model('Category', categorySchema);
 
-module.exports = Categories;
+module.exports = Category;

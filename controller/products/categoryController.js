@@ -1,5 +1,5 @@
-const Categories = require('./../model/categoryModel');
-const factory = require('./../handlers/handleFactory');
+const Categories = require('../../model/products/categoryModel');
+const factory = require('../../handlers/handleFactory');
 
 exports.get_categories = factory.getAll(Categories);
 exports.create_category = factory.getOne(Categories);
