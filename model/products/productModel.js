@@ -45,7 +45,7 @@ const productSchema = mongoose.Schema({
     ],
     category:[
         {
-            type: [mongoose.Schema.ObjectId],
+            type: mongoose.Schema.ObjectId,
             ref: 'Category',
             required: [true, 'A product must have a category']
         }

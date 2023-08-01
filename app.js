@@ -17,6 +17,7 @@ const errorHandler = require("./handlers/handleError");
 const productRouter = require('./routes/products/productRoutes');
 const seasonRouter = require('./routes/products/seasonRoutes');
 const typeRouter = require('./routes/products/typeRoutes');
+const categoryRouter = require('./routes/products/categoryRoutes')
 const userRouter = require('./routes/users/userRoutes');
 const reviewRouter = require('./routes/users/reviewRoutes');
 const webRouter = require('./routes/webRoutes');
@@ -74,6 +75,7 @@ app.use('/', webRouter)
 app.use(API_URL + 'products', productRouter);
 app.use(API_URL + 'season', seasonRouter);
 app.use(API_URL + 'type', typeRouter);
+app.use(API_URL + 'category', categoryRouter);
 app.use(API_URL + 'users', userRouter);
 app.use(API_URL + 'reviews', reviewRouter);
 

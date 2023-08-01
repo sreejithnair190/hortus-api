@@ -15,7 +15,8 @@ router
 router
     .route('/:id')
     .get(controller.get_product)
-    .patch(protect, restrictTo("admin"), controller.update_product)
-    .delete(protect, restrictTo("admin"), controller.delete_product)
+    .all(protect, restrictTo("admin"))
+    .patch(controller.update_product)
+    .delete(controller.delete_product)
 
 module.exports = router;
