@@ -1,21 +1,19 @@
 const express = require('express');
-const Categories = require('./../model/categoryModel');
-const authController = require('./../controller/users/authController');
-const categoryController = require('./../controller/categoryController');
+const { protect, restrictTo } = require('../../middlewares/authMiddleware');
+const categoryController = require('../../controller/products/categoryController');
 
 
 const router = express.Router();
 
-router.use(authController.protect, authController.restrictTo('admin'));
-
 router
     .route('/')
     .get(categoryController.get_categories)
-    .post(categoryController.create_category)
+    .post(protect, restrictTo('admin'), categoryController.create_category)
 
 router
     .route('/:id')
     .get(categoryController.get_category)
+    .all(protect, restrictTo("admin"))
     .patch(categoryController.update_category)
     .delete(categoryController.delete_category)
 

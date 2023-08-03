@@ -11,13 +11,6 @@ const reviewSchema = mongoose.Schema({
     max: 5,
     required: [true, "A review must have a rating"]
   },
-  product:{
-    type:String,
-    enum:['plant', 'seed', 'fertilizer', 'soil', 'pot', 'accessories']
-  },
-  product_id:{
-    type:String,
-  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -29,44 +22,19 @@ const reviewSchema = mongoose.Schema({
       required: [true, 'A review must belong to user'],
     },
   ],
-  plant: [
+  product: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Plants',
+      ref: 'Products',
     },
-  ],
-  seed: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Seeds',
-    },
-  ],
-  fertilizer: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Fertilizers',
-    },
-  ],
-  soil: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Soils',
-    },
-  ],
-  accessory: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Accessories',
-    },
-  ],
+  ]
 },{
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
 
 reviewSchema.pre(/^find/, function (next){
-  this
-  .populate({
+  this.populate({
     path: 'user',
     select: 'name'
   })
