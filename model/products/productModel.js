@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const plantSchema = mongoose.Schema({
+const productSchema = mongoose.Schema({
     name:{
         type:String,
-        required: [true, 'A plant must have a name'],
+        required: [true, 'A product must have a name'],
         unique:true
     },
     description:{
         type:String,
-        required: [true, 'A plant must have a description'],
+        required: [true, 'A product must have a description'],
     },
     price:{
-      type:Number,
-      required: [true, 'A plant must have a price'],  
+        type:Number,
+        required: [true, 'A product must have a price'],
     },
     ratingsAverage:{
         type:Number,
@@ -31,28 +31,29 @@ const plantSchema = mongoose.Schema({
         // required:[true,'A product must have a cover image']
     },
     images:[String],
-    seed:[
+    relatedProducts: [
         {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Seeds'
+            type: [mongoose.Schema.ObjectId],
+            ref: 'Products',
         }
     ],
     season:[
         {
-            type: mongoose.Schema.ObjectId,
+            type: [mongoose.Schema.ObjectId],
             ref: 'Seasons'
         }
     ],
-    categories:[
-        {
-            type: [mongoose.Schema.ObjectId],
-            ref: 'Categories'
-        }
-    ],
-    location:[
+    category:[
         {
             type: mongoose.Schema.ObjectId,
-            ref: 'Locations'
+            ref: 'Category',
+            required: [true, 'A product must have a category']
+        }
+    ],
+    type:[
+        {
+            type: [mongoose.Schema.ObjectId],
+            ref:'Type'
         }
     ],
     createdAt:{
@@ -63,14 +64,14 @@ const plantSchema = mongoose.Schema({
 },{
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
-})
+});
 
-plantSchema.virtual('reviews',{
+productSchema.virtual('reviews',{
     ref: 'Reviews',
-    foreignField: 'plant',
+    foreignField: 'product',
     localField: '_id'
 })
 
-const Plants = mongoose.model('Plants', plantSchema);
+const Products = mongoose.model('Products', productSchema);
 
-module.exports = Plants
+module.exports = Products;

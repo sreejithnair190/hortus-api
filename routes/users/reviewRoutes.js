@@ -1,17 +1,18 @@
 const express = require('express');
 const reviewController = require('./../../controller/users/reviewControlller');
-const authController = require('./../../controller/users/authController');
+const { reviewMiddleware } = require('./../../middlewares/reviewMiddleware');
+const { protect, restrictTo } = require('../../middlewares/authMiddleware');
 
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect);
+router.use(protect);
 
 router
   .route('/')
   .get(reviewController.get_reviews)
   .post(
-    authController.restrictTo('user'),
-    reviewController.reviewMiddleware,
+    restrictTo('user'),
+    reviewMiddleware,
     reviewController.create_review
   );
 
@@ -19,11 +20,11 @@ router
   .route('/:id')
   .get(reviewController.get_review)
   .patch(
-    authController.restrictTo('user'),
+    restrictTo('user'),
     reviewController.update_review
   )
   .delete(
-    authController.restrictTo('user', 'admin'),
+    restrictTo('user', 'admin'),
     reviewController.delete_review
   );
 
