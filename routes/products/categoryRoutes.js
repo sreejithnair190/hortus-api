@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect, restrictTo } = require('../../controller/users/authController');
+const { protect, restrictTo } = require('../../middlewares/authMiddleware');
 const categoryController = require('../../controller/products/categoryController');
 
 

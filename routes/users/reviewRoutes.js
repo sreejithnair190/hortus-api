@@ -1,6 +1,7 @@
 const express = require('express');
 const reviewController = require('./../../controller/users/reviewControlller');
-const { protect, restrictTo } = require('../../controller/users/authController');
+const { reviewMiddleware } = require('./../../middlewares/reviewMiddleware');
+const { protect, restrictTo } = require('../../middlewares/authMiddleware');
 
 const router = express.Router({ mergeParams: true });
 
@@ -11,7 +12,7 @@ router
   .get(reviewController.get_reviews)
   .post(
     restrictTo('user'),
-    reviewController.reviewMiddleware,
+    reviewMiddleware,
     reviewController.create_review
   );
 
