@@ -52,17 +52,17 @@ module.exports = (err, req, res, next) => {
   const data = `[${date} ] ${err.message}\n`;
   fs.appendFile(`./logs/error.log`, data, 'utf-8', (error) => {if(error) {console.log(error.message)}} )
 
-  if (process.env.NODE_ENV == "development") {
+  if (process.env.NODE_ENV === "development") {
     let error = Object.assign(err);
 
-    if (error.name == "CastError") error = handleCastError(error);
-    if (error.code == 11000) error = handleDuplicateFieldsDB(error);
-    if (error.name == "ValidationError") error = handleValidationError(error);
-    if (error.name == "JsonWebTokenError") error = handleJWTError(error);
-    if (error.name == "TokenExpiredError") error = handleTokenExpiredError(error);
+    if (error.name === "CastError") error = handleCastError(error);
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error.name === "ValidationError") error = handleValidationError(error);
+    if (error.name === "JsonWebTokenError") error = handleJWTError(error);
+    if (error.name === "TokenExpiredError") error = handleTokenExpiredError(error);
 
     errDev(error, res);
-  } else if (process.env.NODE_ENV == "production") {
+  } else if (process.env.NODE_ENV === "production") {
     errProd(err, res);
   }
 };
