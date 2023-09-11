@@ -2,6 +2,7 @@ const express = require('express');
 const { protect, restrictTo } = require('../../middlewares/authMiddleware');
 const controller = require('./../../controller/products/productsController');
 const reviewRouter = require('./../users/reviewRoutes');
+const { productImgUpload, resizeProductImage } = require('../../services/multerService');
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router
     .route('/:id')
     .get(controller.get_product)
     .all(protect, restrictTo("admin"))
-    .patch(controller.update_product)
+    .patch(productImgUpload, resizeProductImage, controller.update_product)
     .delete(controller.delete_product)
 
 module.exports = router;

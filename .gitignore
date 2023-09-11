@@ -1,7 +1,7 @@
 node_modules/
 .zip
 .png
-.jpeg
+*.jpeg
 error.log
 .idea/
 .env

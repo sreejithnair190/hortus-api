@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
@@ -66,6 +67,9 @@ app.use(
     ],
   })
 );
+
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Logging in Development
 if (ENV === "development") app.use(morgan("dev"));
