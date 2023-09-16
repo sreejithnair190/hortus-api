@@ -59,53 +59,11 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError("Incorrect email or password", 401));
+    return next(new AppError("Incorrect email or password", 403));
   }
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, res, "Login Successful");
 });
-
-exports.protect = catchAsync(async (req, res, next) => {
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-
-  if (!token) {
-    return next(new AppError("Not Logged in", 401));
-  }
-
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(new AppError("User with this token doesn't exist", 401));
-  }
-
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError("User recently changed password. Please login again", 401)
-    );
-  }
-
-  req.user = currentUser;
-  next();
-});
-
-exports.restrictTo = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("You don't have permission to perform this action", 403)
-      );
-    }
-
-    next();
-  };
-};
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -118,7 +76,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   const resetURL = `${req.protocol}://${req.get(
     "host"
-  )}/api/v1/user/resetPassword/${resetToken}`;
+  )}${API_URL}user/resetPassword/${resetToken}`;
 
   const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
   try {
@@ -171,7 +129,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError("Your password is wrong.", 401));
+    return next(new AppError("Your password is incorrect.", 403));
   }
 
   user.password = req.body.password;
