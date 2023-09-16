@@ -16,7 +16,10 @@ const userSchema = mongoose.Schema({
     lowercase: true,
     //validate: [validator.isEmail,'Please provide a valid email']
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'dummy.png'
+  },
   role:{
     type: String,
     enum: ['user', 'admin'],
@@ -45,7 +48,17 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default : true,
     select: false
-  }
+  },
+  is_verified:{
+    type: Boolean,
+    default: false
+  },
+  wishlist:[
+    {
+      type: [mongoose.Schema.ObjectId],
+      ref: 'Products'
+    }
+  ]
 
 });
 

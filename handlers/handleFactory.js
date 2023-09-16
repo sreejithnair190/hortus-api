@@ -1,103 +1,83 @@
 const ApiFeatures = require("../utils/apiFeatures");
+const AppError = require("../utils/appError");
+const catchAsync = require("../handlers/handleAsyncErr");
 
-exports.deleteOne = Model => async (req, res) => {
-    try {
-      const id = req.params.id;
-      const doc = await Model.findByIdAndDelete(id);
-  
-      res.status(200).json({
-        status: "success",
-        message: "The Doc has been deleted",
-      });
-    } catch (error) {
-      res.status(404).json({
-        status: "failed",
-        message: "Something went wrong",
-        error,
-      });
-    }
-  };
+exports.deleteOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndDelete(req.params.id);
 
-  exports.updateOne = Model => async (req, res) => {
-    try {
-      const id = req.params.id;
-      const doc = await Model.findByIdAndUpdate(id, req.body, {
-        new: true,
-        runValidators: true,
-      });
-  
-      res.status(200).json({
-        status: "success",
-        data: {
-         data: doc,
-        },
-      });
-    } catch (error) {
-      res.status(404).json({
-        status: "failed",
-        message: "Something went wrong",
-        error,
-      });
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
     }
-  };
 
-exports.createOne = Model => async (req, res) => {
-    try {
-      const doc = await Model.create(req.body);
-  
-      res.status(201).json({
-        status: "success",
-        data: {
-          data: doc,
-        },
-      });
-    } catch (error) {
-      res.status(404).json({
-        status: "failed",
-        message: "Something went wrong",
-        error,
-      });
-    }
-  };
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  });
 
-exports.getOne = Model => async (req, res) => {
-    try {
-      const id = req.params.id;
-      const doc = await Model.findById(id);
-  
-      res.status(200).json({
-        status: "success",
-        data: {
-          data: doc,
-        },
-      });
-    } catch (error) {
-      res.status(404).json({
-        status: "failed",
-        message: "Something went wrong",
-        error,
-      });
-    }
-  };
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-  exports.getAll = Model => async (req, res) => {
-    try {
-      const Features = new ApiFeatures(Model.find(), req.query);
-      Features.filter().sort().fields().pagination();
-  
-      const doc = await Features.query;
-      res.status(200).json({
-        status: "success",
-        results: doc.length,
-        data: {
-          data: doc,
-        },
-      });
-    } catch (error) {
-      res.status(404).json({
-        status: "failed",
-        message: "Something went wrong",
-        error,
-      });
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
     }
-  };
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        data: doc,
+      },
+    });
+  });
+
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.create(req.body);
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        data: doc,
+      },
+    });
+  });
+
+exports.getOne = (Model, popuplateOptions) =>
+  catchAsync(async (req, res, next) => {
+    let query = await Model.findById(req.params.id);
+
+    if (popuplateOptions) query = query.populate(popuplateOptions);
+
+    const doc = await query;
+
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        data: doc,
+      },
+    });
+  });
+
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const Features = new ApiFeatures(Model.find(), req.query);
+    Features.filter().sort().fields().pagination();
+
+    const doc = await Features.query;
+    res.status(200).json({
+      status: "success",
+      results: doc.length,
+      data: {
+        data: doc,
+      },
+    });
+  });

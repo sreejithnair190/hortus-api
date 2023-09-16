@@ -5,6 +5,8 @@ const User = require("./../../model/users/userModel");
 const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
 const Email = require("./../../utils/email");
+const sendEmail = require("./../../utils/email");
+const { API_URL } = require("./../../utils/constants");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -23,6 +25,8 @@ const createSendToken = (user, statusCode, res) => {
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
+
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
@@ -116,14 +120,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     "host"
   )}/api/v1/user/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}\nIf you didn't forget your password, please ignore this email`;
+  const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
   try {
     // await sendEmail({
     //   email: user.email,
     //   subject: "Your password reset token valid for 10 minutes",
     //   message,
     // });
-
     await new Email(user, resetURL).sendPasswordReset(message);
 
     res.status(200).json({
@@ -136,7 +139,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     return next(
-      new AppError("There was an error sending email. Try again later.", 500)
+      new AppError("There was an error sending email. Try again later.", 400)
     );
   }
 });
