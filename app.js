@@ -21,6 +21,7 @@ const typeRouter = require('./routes/products/typeRoutes');
 const categoryRouter = require('./routes/products/categoryRoutes')
 const userRouter = require('./routes/users/userRoutes');
 const reviewRouter = require('./routes/users/reviewRoutes');
+const orderRouter = require('./routes/orders/orderRoute');
 const webRouter = require('./routes/webRoutes');
 
 const { ENV, API_URL } = require('./utils/constants');
@@ -82,6 +83,7 @@ app.use(API_URL + 'type', typeRouter);
 app.use(API_URL + 'category', categoryRouter);
 app.use(API_URL + 'users', userRouter);
 app.use(API_URL + 'reviews', reviewRouter);
+app.use(API_URL + 'orders', orderRouter);
 
 // Handle Undefined Route
 app.all("*", (req, res, next) => {
