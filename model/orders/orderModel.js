@@ -15,9 +15,10 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: [true, 'An order must have a amount']
     },
-    payment:{
-
-    },
+    // payment:{
+    //     type:mongoose.Schema.ObjectId,
+    //     ref: 'Payment',
+    // },
     createdAt:{
         type:Date,
         default:Date.now(),
