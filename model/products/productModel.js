@@ -28,28 +28,20 @@ const productSchema = mongoose.Schema({
     },
     imageCover: {
         type:String,
-        // required:[true,'A product must have a cover image']
+        required:[true,'A product must have a cover image']
     },
     images:[String],
-    relatedProducts: [
-        {
-            type: [mongoose.Schema.ObjectId],
-            ref: 'Products',
-        }
-    ],
     season:[
         {
             type: [mongoose.Schema.ObjectId],
             ref: 'Seasons'
         }
     ],
-    category:[
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Category',
-            required: [true, 'A product must have a category']
-        }
-    ],
+    category:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Category',
+        required: [true, 'A product must have a category']
+    },
     type:[
         {
             type: [mongoose.Schema.ObjectId],

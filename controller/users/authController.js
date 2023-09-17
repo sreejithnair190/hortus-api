@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("./../../model/users/userModel");
+const Address = require("./../../model/users/addressModel");
 const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
 const sendEmail = require("./../../utils/email");
@@ -35,9 +36,18 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 exports.signup = catchAsync(async (req, res, next) => {
+
+  const address = await Address.create({
+    address: req.body.address,
+    city: req.body.city,
+    state: req.body.state,
+    country: req.body.country
+  });
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
+    address: address._id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
