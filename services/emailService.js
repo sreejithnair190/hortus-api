@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const pug = require("pug");
+const htmlToText = require("html-to-text");
 
 module.exports = class Email {
   constructor(user, url) {
@@ -11,7 +13,7 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === "production") {
       return nodemailer.createTransport({
-        host: "smtp-relay.brevo.com",
+        host: process.env.BREVO_HOST,
         port: 587,
         auth: {
           user: process.env.EMAIL_FROM,
@@ -33,24 +35,32 @@ module.exports = class Email {
     });
   }
 
-  async send(subject, text) {
+  async send(template, subject) {
+    const html = pug.renderFile(
+      `${__dirname}/../public/emailTemplates/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
+
     const mailOptions = {
       from: this.from,
       to: this.to,
       subject,
-      text,
+      html,
+      text: htmlToText.fromString(html),
     };
 
     await this.newTransport().sendMail(mailOptions);
   }
 
   async sendWelcome() {
-    const welcomeText =
-      "Welcome to Hortus! We're excited to have you as a member.";
-    await this.send("Welcome to Hortus", welcomeText);
+    await this.send("welcome", "Welcome to Hortus");
   }
 
-  async sendPasswordReset(message) {
-    await this.send("Password Reset", message);
+  async sendPasswordReset() {
+    await this.send("Password Reset");
   }
 };
