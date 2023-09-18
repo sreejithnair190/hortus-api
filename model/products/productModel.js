@@ -28,6 +28,7 @@ const productSchema = mongoose.Schema({
     },
     imageCover: {
         type:String,
+<<<<<<< HEAD
         // required:[true,'A product must have a cover image']
     },
     images:[String],
@@ -37,12 +38,18 @@ const productSchema = mongoose.Schema({
             ref: 'Products',
         }
     ],
+=======
+        required:[true,'A product must have a cover image']
+    },
+    images:[String],
+>>>>>>> 033259b33e19336a632f359f7701ac161ee22666
     season:[
         {
             type: [mongoose.Schema.ObjectId],
             ref: 'Seasons'
         }
     ],
+<<<<<<< HEAD
     category:[
         {
             type: mongoose.Schema.ObjectId,
@@ -50,6 +57,13 @@ const productSchema = mongoose.Schema({
             required: [true, 'A product must have a category']
         }
     ],
+=======
+    category:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Category',
+        required: [true, 'A product must have a category']
+    },
+>>>>>>> 033259b33e19336a632f359f7701ac161ee22666
     type:[
         {
             type: [mongoose.Schema.ObjectId],
