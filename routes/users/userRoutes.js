@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const express = require("express");
 const authController = require("../../controller/users/authController");
 const userController = require("../../controller/users/userController");
@@ -7,13 +6,6 @@ const {
   resizeUserImage,
 } = require("../../services/multerService");
 const { protect, restrictTo } = require("../../middlewares/authMiddleware");
-=======
-const express = require('express');
-const authController = require('../../controller/users/authController');
-const userController = require('../../controller/users/userController');
-const { userImgUpload, resizeUserImage } = require('../../services/multerService')
-const { protect, restrictTo } = require('../../middlewares/authMiddleware');
->>>>>>> 033259b33e19336a632f359f7701ac161ee22666
 
 const router = express.Router();
 
@@ -26,17 +18,10 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 router.use(protect);
 
 router
-<<<<<<< HEAD
   .route("/me")
   .get(userController.getMe, userController.get_user)
   .delete(userController.deleteMe)
   .patch(userImgUpload, resizeUserImage, userController.updateMe);
-=======
-    .route("/me")
-    .get( userController.getMe, userController.get_user)
-    .delete(userController.deleteMe)
-    .patch(userImgUpload, resizeUserImage, userController.updateMe)
->>>>>>> 033259b33e19336a632f359f7701ac161ee22666
 
 router.patch("/updateMyPassword", authController.updatePassword);
 

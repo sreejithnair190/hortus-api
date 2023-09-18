@@ -1,91 +1,72 @@
 const mongoose = require("mongoose");
 
-const productSchema = mongoose.Schema({
-    name:{
-        type:String,
-        required: [true, 'A product must have a name'],
-        unique:true
+const productSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "A product must have a name"],
+      unique: true,
     },
-    description:{
-        type:String,
-        required: [true, 'A product must have a description'],
+    description: {
+      type: String,
+      required: [true, "A product must have a description"],
     },
-    price:{
-        type:Number,
-        required: [true, 'A product must have a price'],
+    price: {
+      type: Number,
+      required: [true, "A product must have a price"],
     },
-    ratingsAverage:{
-        type:Number,
-        default:4.5
+    ratingsAverage: {
+      type: Number,
+      default: 4.5,
     },
-    ratingsQuantity:{
-        type:Number,
-        default: 0
+    ratingsQuantity: {
+      type: Number,
+      default: 0,
     },
-    available:{
-        type:Number,
-        default:0
+    available: {
+      type: Number,
+      default: 0,
     },
     imageCover: {
-        type:String,
-<<<<<<< HEAD
-        // required:[true,'A product must have a cover image']
+      type: String,
+      required: [true, "A product must have a cover image"],
     },
-    images:[String],
-    relatedProducts: [
-        {
-            type: [mongoose.Schema.ObjectId],
-            ref: 'Products',
-        }
+    images: [String],
+    season: [
+      {
+        type: [mongoose.Schema.ObjectId],
+        ref: "Seasons",
+      },
     ],
-=======
-        required:[true,'A product must have a cover image']
+    category: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Category",
+      required: [true, "A product must have a category"],
     },
-    images:[String],
->>>>>>> 033259b33e19336a632f359f7701ac161ee22666
-    season:[
-        {
-            type: [mongoose.Schema.ObjectId],
-            ref: 'Seasons'
-        }
+    type: [
+      {
+        type: [mongoose.Schema.ObjectId],
+        ref: "Type",
+      },
     ],
-<<<<<<< HEAD
-    category:[
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Category',
-            required: [true, 'A product must have a category']
-        }
-    ],
-=======
-    category:{
-        type: mongoose.Schema.ObjectId,
-        ref: 'Category',
-        required: [true, 'A product must have a category']
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+      select: false,
     },
->>>>>>> 033259b33e19336a632f359f7701ac161ee22666
-    type:[
-        {
-            type: [mongoose.Schema.ObjectId],
-            ref:'Type'
-        }
-    ],
-    createdAt:{
-        type:Date,
-        default:Date.now(),
-        select:false,
-    }
-},{
+  },
+  {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
+  }
+);
+
+productSchema.virtual("reviews", {
+  ref: "Reviews",
+  foreignField: "product",
+  localField: "_id",
 });
 
-productSchema.virtual('reviews',{
-    ref: 'Reviews',
-    foreignField: 'product',
-    localField: '_id'
-})
-
-const Products = mongoose.model('Products', productSchema);
+const Products = mongoose.model("Products", productSchema);
 
 module.exports = Products;

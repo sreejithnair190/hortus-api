@@ -36,12 +36,11 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 exports.signup = catchAsync(async (req, res, next) => {
-
   const address = await Address.create({
     address: req.body.address,
     city: req.body.city,
     state: req.body.state,
-    country: req.body.country
+    country: req.body.country,
   });
 
   const newUser = await User.create({
@@ -67,10 +66,9 @@ exports.login = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ email }).select("+password");
 
-    if(!user || !(await user.correctPassword(password,user.password))){
-        return next(new AppError('Incorrect email or password',401));
-        
-    }
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError("Incorrect email or password", 401));
+  }
 
   createSendToken(user, 200, res, "Login Successful");
 });
@@ -84,7 +82,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
-  const resetURL = `${req.protocol}://${req.get('host')}/api/v1/user/resetPassword/${resetToken}`;
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/users/resetPassword/${resetToken}`;
 
   const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
   try {
@@ -131,8 +131,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
-  if(!(await user.correctPassword(req.body.passwordCurrent,user.password))){
-    return next(new AppError('Your password is wrong.',401));
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your password is wrong.", 401));
   }
 
   user.password = req.body.password;
