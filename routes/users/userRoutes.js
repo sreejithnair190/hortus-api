@@ -1,8 +1,11 @@
-const express = require('express');
-const authController = require('../../controller/users/authController');
-const userController = require('../../controller/users/userController');
-const { userImgUpload, resizeUserImage } = require('../../services/multerService')
-const { protect, restrictTo } = require('../../middlewares/authMiddleware');
+const express = require("express");
+const authController = require("../../controller/users/authController");
+const userController = require("../../controller/users/userController");
+const {
+  userImgUpload,
+  resizeUserImage,
+} = require("../../services/multerService");
+const { protect, restrictTo } = require("../../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -15,10 +18,10 @@ router.patch("/resetPassword/:token", authController.resetPassword);
 router.use(protect);
 
 router
-    .route("/me")
-    .get( userController.getMe, userController.get_user)
-    .delete(userController.deleteMe)
-    .patch(userImgUpload, resizeUserImage, userController.updateMe)
+  .route("/me")
+  .get(userController.getMe, userController.get_user)
+  .delete(userController.deleteMe)
+  .patch(userImgUpload, resizeUserImage, userController.updateMe);
 
 router.patch("/updateMyPassword", authController.updatePassword);
 

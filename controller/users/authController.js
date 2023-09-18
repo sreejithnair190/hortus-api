@@ -2,10 +2,10 @@ const crypto = require("crypto");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("./../../model/users/userModel");
+const Address = require("./../../model/users/addressModel");
 const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
-const Email = require("./../../utils/email");
-const sendEmail = require("./../../utils/email");
+const Email = require("../../services/emailService");
 const { API_URL } = require("./../../utils/constants");
 
 const signToken = (id) => {
@@ -37,16 +37,25 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 exports.signup = catchAsync(async (req, res, next) => {
+  const address = await Address.create({
+    address: req.body.address,
+    city: req.body.city,
+    state: req.body.state,
+    country: req.body.country,
+  });
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
+    address: address._id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
 
   const url = `${req.protocol}://${req.get("host")}/me`;
   await new Email(newUser, url).sendWelcome();
-  createSendToken(newUser, 201, res);
+
+  createSendToken(newUser, 201, res, "Sign-up successful");
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -59,7 +68,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError("Incorrect email or password", 403));
+    return next(new AppError("Incorrect email or password", 401));
   }
 
   createSendToken(user, 200, res, "Login Successful");
@@ -76,16 +85,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   const resetURL = `${req.protocol}://${req.get(
     "host"
-  )}${API_URL}user/resetPassword/${resetToken}`;
+  )}/api/v1/users/resetPassword/${resetToken}`;
 
   const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
   try {
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: "Your password reset token valid for 10 minutes",
-    //   message,
-    // });
-    await new Email(user, resetURL).sendPasswordReset(message);
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: "success",
@@ -129,7 +133,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError("Your password is incorrect.", 403));
+    return next(new AppError("Your password is wrong.", 401));
   }
 
   user.password = req.body.password;
