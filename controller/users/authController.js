@@ -7,6 +7,7 @@ const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
 const Email = require("../../services/emailService");
 const { API_URL } = require("./../../utils/constants");
+const utils = require("./../../utils/utils")
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -36,6 +37,7 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
 exports.signup = catchAsync(async (req, res, next) => {
   const address = await Address.create({
     address: req.body.address,
@@ -47,13 +49,19 @@ exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
-    address: address._id,
+    address: address.id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const url = `${req.protocol}://${req.get("host")}/me`;
-  await new Email(newUser, url).sendWelcome();
+  // const url = `${req.protocol}://${req.get("host")}/me`;
+
+  const view = utils.getTemplate('welcome');
+  const subject = "Welcome to Hortus - Your Green Oasis Awaits!";
+  const data = {
+    name: newUser.name
+  }
+  await new Email(newUser).sendMail(view, subject, data)
 
   createSendToken(newUser, 201, res, "Sign-up successful");
 });
