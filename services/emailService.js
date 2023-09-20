@@ -14,11 +14,11 @@ class Email {
 
   newTransport() {
     return nodemailer.createTransport({
-      host: process.env.BREVO_HOST,
+      host: process.env.EMAIL_HOST,
       port: 587,
       auth: {
         user: process.env.EMAIL_FROM,
-        pass: process.env.BREVO_SMTP_KEY,
+        pass: process.env.EMAIL_SMTP_KEY,
       },
       tls: {
         rejectUnauthorized: false, // Accept self-signed certificates - Uncomment if error arises

@@ -7,7 +7,7 @@ const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
 const Email = require("../../services/emailService");
 const { API_URL } = require("./../../utils/constants");
-const utils = require("./../../utils/utils")
+const utils = require("./../../utils/utils");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -56,12 +56,12 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // const url = `${req.protocol}://${req.get("host")}/me`;
 
-  const view = utils.getTemplate('welcome');
+  const view = utils.getTemplate("welcome");
   const subject = "Welcome to Hortus - Your Green Oasis Awaits!";
   const data = {
-    name: newUser.name
-  }
-  await new Email(newUser).sendMail(view, subject, data)
+    name: newUser.name,
+  };
+  await new Email(newUser).sendMail(view, subject, data);
 
   createSendToken(newUser, 201, res, "Sign-up successful");
 });
@@ -95,9 +95,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     "host"
   )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
+  const view = utils.getTemplate("passwordReset"); // You can create a new email template for password reset
+  const subject = "Password Reset Request";
+  const data = {
+    name: user.name,
+    resetURL: resetURL,
+  };
   try {
-    await new Email(user, resetURL).sendPasswordReset();
+    await new Email(user).sendMail(view, subject, data);
 
     res.status(200).json({
       status: "success",
