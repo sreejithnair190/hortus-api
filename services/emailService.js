@@ -1,8 +1,7 @@
 const nodemailer = require("nodemailer");
 const pug = require("pug");
 
-class Email{
-
+class Email {
   firstName;
   to;
   from;
@@ -15,20 +14,22 @@ class Email{
 
   newTransport() {
     return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
+      host: process.env.BREVO_HOST,
       port: 587,
       auth: {
         user: process.env.EMAIL_FROM,
-        pass: process.env.EMAIL_KEY,
+        pass: process.env.BREVO_SMTP_KEY,
+      },
+      tls: {
+        rejectUnauthorized: false, // Accept self-signed certificates - Uncomment if error arises
       },
     });
   }
 
-  async sendMail(view, subject, data){
+  async sendMail(view, subject, data) {
+    data.support_email = process.env.SUPPORT_EMAIL;
 
-    data.support_email = process.env.SUPPORT_EMAIL
-
-    const html = pug.renderFile( view, data );
+    const html = pug.renderFile(view, data);
 
     const mailOptions = {
       from: this.from,
@@ -39,7 +40,6 @@ class Email{
 
     await this.newTransport().sendMail(mailOptions);
   }
-
 }
 
 module.exports = Email;
