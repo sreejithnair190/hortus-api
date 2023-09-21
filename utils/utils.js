@@ -1,0 +1,1 @@
+exports.getTemplate = (template) => `${__dirname}/../public/views/mails/${template}.pug`;

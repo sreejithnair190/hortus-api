@@ -1,3 +1,8 @@
+const Email = require("./../services/emailService");
+const User = require("./../model/users/userModel");
+const catchAsync = require("./../handlers/handleAsyncErr");
+const utils = require("./../utils/utils");
+
 exports.home_url = (req, res) => {
     try{
         res.status(200).json({
@@ -6,4 +11,18 @@ exports.home_url = (req, res) => {
         })
     }catch(err) {}
 }
-    
+
+exports.test_email = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    const email = new Email(user);
+    const view = utils.getTemplate('passwordReset');
+    const subject = "Welcome to Hortus - Your Green Oasis Awaits!";
+    const data = {
+        name: user.name
+    }
+    await new Email(user).sendMail(view, subject, data)
+
+    res.status(200).json({
+        status:"success"
+    })
+});

@@ -15,16 +15,16 @@ const AppError = require("./utils/appError");
 const errorHandler = require("./handlers/handleError");
 
 // Routers
-const productRouter = require('./routes/products/productRoutes');
-const seasonRouter = require('./routes/products/seasonRoutes');
-const typeRouter = require('./routes/products/typeRoutes');
-const categoryRouter = require('./routes/products/categoryRoutes')
-const userRouter = require('./routes/users/userRoutes');
-const reviewRouter = require('./routes/users/reviewRoutes');
-const orderRouter = require('./routes/orders/orderRoute');
-const webRouter = require('./routes/webRoutes');
+const productRouter = require("./routes/products/productRoutes");
+const seasonRouter = require("./routes/products/seasonRoutes");
+const typeRouter = require("./routes/products/typeRoutes");
+const categoryRouter = require("./routes/products/categoryRoutes");
+const userRouter = require("./routes/users/userRoutes");
+const reviewRouter = require("./routes/users/reviewRoutes");
+const orderRouter = require("./routes/orders/orderRoute");
+const webRouter = require("./routes/webRoutes");
 
-const { ENV, API_URL } = require('./utils/constants');
+const { ENV, API_URL } = require("./utils/constants");
 // Configuring ENV
 dotenv.config();
 
@@ -70,20 +70,20 @@ app.use(
 );
 
 // Serving static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Logging in Development
 if (ENV === "development") app.use(morgan("dev"));
 
 //Routes
-app.use('/', webRouter)
-app.use(API_URL + 'products', productRouter);
-app.use(API_URL + 'season', seasonRouter);
-app.use(API_URL + 'type', typeRouter);
-app.use(API_URL + 'category', categoryRouter);
-app.use(API_URL + 'users', userRouter);
-app.use(API_URL + 'reviews', reviewRouter);
-app.use(API_URL + 'orders', orderRouter);
+app.use("/", webRouter);
+app.use(API_URL + "products", productRouter);
+app.use(API_URL + "season", seasonRouter);
+app.use(API_URL + "type", typeRouter);
+app.use(API_URL + "category", categoryRouter);
+app.use(API_URL + "users", userRouter);
+app.use(API_URL + "reviews", reviewRouter);
+app.use(API_URL + "orders", orderRouter);
 
 // Handle Undefined Route
 app.all("*", (req, res, next) => {
@@ -93,14 +93,15 @@ app.all("*", (req, res, next) => {
 app.use(errorHandler);
 
 //Database Connection
-if (!process.env.PASSWORD) console.log('Please provide a password in env');
+if (!process.env.PASSWORD) console.log("Please provide a password in env");
 
-const DB = process.env.DATABASE.replace('<password>',process.env.PASSWORD);
-mongoose.connect(DB, {
-  useNewUrlParser:true
-})
-.then( con => console.log("Database connection was successful"))
-.catch(() => console.log("Database connection was unsuccessful"))
+const DB = process.env.DATABASE.replace("<password>", process.env.PASSWORD);
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+  })
+  .then((con) => console.log("Database connection was successful"))
+  .catch(() => console.log("Database connection was unsuccessful"));
 
 // Starting Server
 const port = process.env.PORT || 6000;
