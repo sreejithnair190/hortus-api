@@ -1,11 +1,13 @@
 const crypto = require("crypto");
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("./../../model/users/userModel");
 const Address = require("./../../model/users/addressModel");
 const AppError = require("./../../utils/appError");
 const catchAsync = require("./../../handlers/handleAsyncErr");
-const sendEmail = require("./../../utils/email");
-const {API_URL} = require("./../../utils/constants")
+const Email = require("../../services/emailService");
+const { API_URL } = require("./../../utils/constants");
+const utils = require("./../../utils/utils");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -35,22 +37,31 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
-exports.signup = catchAsync(async (req, res, next) => {
 
+exports.signup = catchAsync(async (req, res, next) => {
   const address = await Address.create({
     address: req.body.address,
     city: req.body.city,
     state: req.body.state,
-    country: req.body.country
+    country: req.body.country,
   });
 
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
-    address: address._id,
+    address: address.id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
+
+  // const url = `${req.protocol}://${req.get("host")}/me`;
+
+  const view = utils.getTemplate("welcome");
+  const subject = "Welcome to Hortus - Your Green Oasis Awaits!";
+  const data = {
+    name: newUser.name,
+  };
+  await new Email(newUser).sendMail(view, subject, data);
 
   createSendToken(newUser, 201, res, "Sign-up successful");
 });
@@ -65,7 +76,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError("Incorrect email or password", 403));
+    return next(new AppError("Incorrect email or password", 401));
   }
 
   createSendToken(user, 200, res, "Login Successful");
@@ -82,15 +93,16 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   const resetURL = `${req.protocol}://${req.get(
     "host"
-  )}${API_URL}user/resetPassword/${resetToken}`;
+  )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit request with new password and passwordConfirm to: ${resetURL}.\n If you didn't forget your password, please ignore this email`;
+  const view = utils.getTemplate("passwordReset"); // You can create a new email template for password reset
+  const subject = "Password Reset Request";
+  const data = {
+    name: user.name,
+    resetURL: resetURL,
+  };
   try {
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token valid for 10 minutes",
-      message,
-    });
+    await new Email(user).sendMail(view, subject, data);
 
     res.status(200).json({
       status: "success",
@@ -134,7 +146,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError("Your password is incorrect.", 403));
+    return next(new AppError("Your password is wrong.", 401));
   }
 
   user.password = req.body.password;
