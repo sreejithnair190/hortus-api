@@ -20,9 +20,9 @@ class Email {
         user: process.env.EMAIL_FROM,
         pass: process.env.EMAIL_SMTP_KEY,
       },
-      tls: {
-        rejectUnauthorized: false, // Accept self-signed certificates - Uncomment if error arises
-      },
+      // tls: {
+      //   rejectUnauthorized: false, // Accept self-signed certificates - Uncomment if error arises
+      // },
     });
   }
 
