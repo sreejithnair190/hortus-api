@@ -1,6 +1,7 @@
 const ApiFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
 const catchAsync = require("../handlers/handleAsyncErr");
+const { sendSuccess } = require("./../utils/utils");
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -10,10 +11,7 @@ exports.deleteOne = (Model) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    sendSuccess(res, 204); // Use sendSuccess with default data (null)
   });
 
 exports.updateOne = (Model) =>
@@ -27,24 +25,14 @@ exports.updateOne = (Model) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        data: doc,
-      },
-    });
+    sendSuccess(res, 200, doc); // Use sendSuccess with custom data
   });
 
 exports.createOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.create(req.body);
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        data: doc,
-      },
-    });
+    sendSuccess(res, 201, doc); // Use sendSuccess with custom data
   });
 
 exports.getOne = (Model, popuplateOptions) =>
@@ -59,12 +47,7 @@ exports.getOne = (Model, popuplateOptions) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        data: doc,
-      },
-    });
+    sendSuccess(res, 200, doc); // Use sendSuccess with custom data
   });
 
 exports.getAll = (Model) =>
@@ -73,11 +56,9 @@ exports.getAll = (Model) =>
     Features.filter().sort().fields().pagination();
 
     const doc = await Features.query;
-    res.status(200).json({
-      status: "success",
+
+    sendSuccess(res, 200, {
       results: doc.length,
-      data: {
-        data: doc,
-      },
-    });
+      data: doc,
+    }); // Use sendSuccess with custom data
   });
